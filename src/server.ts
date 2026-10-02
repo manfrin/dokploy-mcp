@@ -140,9 +140,11 @@ function stripUnsupportedRegexPatterns(value: unknown): void {
 // error on tools/list. We bypass the SDK's auto-generated handler by
 // registering our own with pre-converted draft-2020-12 schemas.
 // See https://github.com/Dokploy/mcp/issues/32
+// The "jsonSchema7" target is the only one that writes exclusiveMinimum/Maximum
+// as numbers, as 2020-12 requires; the others use the draft-04 boolean form.
 function toDraft2020_12JsonSchema(schema: ZodObject<ZodRawShape>): Record<string, unknown> {
   const result = zodToJsonSchema(schema, {
-    target: "jsonSchema2019-09",
+    target: "jsonSchema7",
     strictUnions: true,
   }) as Record<string, unknown>;
 

@@ -138,6 +138,16 @@ describe("MCP server tools/list", () => {
     }
   });
 
+  it("emits exclusive bounds as numbers, not draft-04 booleans", async () => {
+    const tools = await getToolList();
+    expect(JSON.stringify(tools)).not.toMatch(/"exclusive(Minimum|Maximum)":(true|false)/);
+
+    const createRecord = tools.find((tool) => tool.name === "dnsProvider-createRecord");
+    expect(createRecord?.inputSchema).toMatchObject({
+      properties: { ttl: { exclusiveMinimum: 0 } },
+    });
+  });
+
   it("no tool inputSchema exposes regex lookaround patterns", async () => {
     const tools = await getToolList();
 
